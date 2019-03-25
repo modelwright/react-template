@@ -38,7 +38,8 @@ const config = {
     output: {
         path: path.resolve(__dirname, '../dist'),
         filename: envDevelopment ? 'js/[name].js' : 'js/[name].[chunkhash:5].js',
-        publicPath: '../'
+        publicPath: '../',
+        // vendor: ['react','react-dom','react-router-dom'] webpack4以下采用此种方式分离公共代码和第三方依赖 webpack4自动分离
     },
     mode: NODE_ENV,
     devtool: devtool,

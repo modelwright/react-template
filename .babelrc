@@ -1,11 +1,16 @@
 {
     "presets": [
       "@babel/preset-react",
+      //(下面plugins是stage-2)
+      //"@babel/preset-stage-0", // react建议配到stage-0 通常使用建议配到@babel/preset-stage-2 （syntax-dynamic-import： 动态import,transform-class-properties：用于 class 的属性转化,transform-object-rest-spread：用来处理 rest spread,transform-async-generator-functions：用来处理 async 和 await）
+      // stage-0中的两个插件对于写JSX很有帮助。
+      //transform-do-expressions：if/else三目运算展开
+      //transform-function-bind：this绑定
       [
-        "@babel/preset-env",
+        "@babel/preset-env", //替换之前所有babel-presets-es20xx插件   支持到stage-4
         {
           "modules"    : "commonjs",
-          "useBuiltIns": "usage", // 按需引入
+          "useBuiltIns": "usage", // 按需引入 core-js  entry模式引入@babel/polyfill
           "targets"    : { //设置支持环境
             "browsers": ["last 2 versions","safari 7"],
             "chrome": 52,
@@ -18,7 +23,7 @@
       ["@babel/plugin-proposal-decorators", { "legacy": true }],
       ["@babel/plugin-proposal-class-properties", { "loose": true }],
       "@babel/plugin-syntax-dynamic-import",
-      ["@babel/plugin-transform-runtime"],
+      ["@babel/plugin-transform-runtime"], // 多个文件重复引用相同helpers（帮助函数）-> 提取运行时    新API方法全局污染 -> 局部引入   这个插件推荐在编写library/module时使用。当然，以上问题可通过设置useBuiltIns搞定。
       ["@babel/plugin-proposal-object-rest-spread", {"useBuiltIns": true}],
       ["import", { 
         "libraryName": "antd",

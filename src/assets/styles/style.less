@@ -1,0 +1,41 @@
+@charset 'utf-8';
+@import (reference) 'base.less';
+
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color .3s;
+}
+.trigger:hover {
+  color: #1890ff;
+}
+.logo {
+  height: 32px;
+  background: rgba(255,255,255,.2);
+  margin: 16px;
+}
+.ant-layout.ant-layout-has-sider,.MainContiner{
+  height: 100%;
+}
+.loginback{position: fixed;
+  top: 0px;
+  left: -30px;
+  bottom: 0px;
+  right: -20px;
+  z-index: 2!important;
+  height: 100%;
+  background-size: 90%;
+  background-image: url(../Images/png/infinite_bg.png);
+  animation: 90s scroll infinite linear;
+}
+@keyframes scroll{100%{background-position:2000px 2000px;}}
+.login-form{width: 300px;margin: 0px auto 30px auto;background-color: #fff;padding: 0 20px; box-shadow: 0px 2px 5px rgba(0,0,0,0.15);.borR(5px);.pos;left: 50%;top: 50%;margin-left: -150px;.mt(-250px);}
+.login-bg{width: 115.5%;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin-left: -20px;}
