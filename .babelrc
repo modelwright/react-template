@@ -1,0 +1,29 @@
+{
+    "presets": [
+      "@babel/preset-react",
+      [
+        "@babel/preset-env",
+        {
+          "modules"    : "commonjs",
+          "useBuiltIns": "usage", // 按需引入
+          "targets"    : { //设置支持环境
+            "browsers": ["last 2 versions","safari 7"],
+            "chrome": 52,
+            "node": "current"
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      ["@babel/plugin-proposal-decorators", { "legacy": true }],
+      ["@babel/plugin-proposal-class-properties", { "loose": true }],
+      "@babel/plugin-syntax-dynamic-import",
+      ["@babel/plugin-transform-runtime"],
+      ["@babel/plugin-proposal-object-rest-spread", {"useBuiltIns": true}],
+      ["import", { 
+        "libraryName": "antd",
+        "style": true,
+        "libraryDirectory": "es"
+      }]
+    ]
+  }
