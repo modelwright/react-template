@@ -1,16 +1,26 @@
 import React from 'React'
 import ReactDOM from 'react-dom'
-import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import reducer from '@/stores'
+import store from '@/stores'
 
-// 创建store
-const store = createStore(reducer)
+// 监听state变化
+// store.subscribe(() => {
+//   console.log('store发生了变化');
+// });
+
+console.log(store.getState())
+
+store.dispatch({
+    type: 'ADD_TODO',
+    text: '1'
+})
+store.dispatch({
+    type: 'INCREMENT',
+    text: 3
+})
+console.log(store.getState())
 
 class ShitMe extends React.Component {
-    componentWillMount() {
-        console.log(store.getState())
-    }
     render() {
         return (
             <Provider store={store}>
@@ -24,4 +34,16 @@ ReactDOM.render(<ShitMe />, document.getElementById('app'))
 
 if (module.hot) {
     module.hot.accept()
+    // module.hot.accept('./containers/Root', () => {
+    //     const newConfigureStore = require('./store/configureStore');
+    //     const newStore = newConfigureStore.configureStore();
+    //     const newHistory = newConfigureStore.history;
+    //     const NewRoot = require('./containers/Root').default;
+    //     render(
+    //         <AppContainer>
+    //             <NewRoot store={newStore} history={newHistory} />
+    //         </AppContainer>,
+    //         document.getElementById('root')
+    //     );
+    // });
 }

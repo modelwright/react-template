@@ -1,21 +1,12 @@
-const tiger = 10000
+import { createStore, combineReducers, applyMiddleware } from 'redux'
 
-// 这是action
-// const increase = {
-//     type: '涨工资'
-// }
-// const decrease = {
-//     type: '扣工资'
-// }
-// 这是reducer
-const reducer = (state = tiger, action) => {
-    switch (action.type) {
-        case '涨工资':
-            return (state += 100)
-        case '扣工资':
-            return (state -= 100)
-        default:
-            return state
-    }
-}
-export default reducer
+import home from './modules/home'
+import mine from './modules/mine'
+import thunk from 'redux-thunk'
+
+let store = createStore(
+    combineReducers({ home, mine }),
+    applyMiddleware(thunk)
+)
+
+export default store

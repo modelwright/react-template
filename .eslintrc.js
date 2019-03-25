@@ -113,7 +113,7 @@ module.exports = {
     'new-parens': 2,//new时必须加小括号
     'no-array-constructor': 2,//禁止使用数组构造器
     'no-caller': 2,//禁止使用arguments.caller或arguments.callee
-    'no-class-assign': 2,//禁止给类赋值
+    'no-class-assign': 1,//禁止给类赋值
     'no-cond-assign': 2,//禁止在条件表达式中使用赋值语句
     'no-const-assign': 2,//禁止修改const声明的变量
     "no-console": "off",//是否禁止使用console
