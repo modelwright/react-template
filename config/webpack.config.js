@@ -107,7 +107,7 @@ const base = {
             __ENV__: JSON.stringify(env)
         }),
         new webpack.DllReferencePlugin({
-            context : basePath,
+            context : '../dll',
             manifest: path.resolve(basePath, '../dll', 'manifest.json')
         }),
         new HtmlWebpackPlugin({
