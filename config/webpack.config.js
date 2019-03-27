@@ -1,218 +1,132 @@
+const webpack             = require('webpack')
+const path                = require('path')
+const HtmlWebpackPlugin   = require('html-webpack-plugin')
+const IncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
+const ESLintFormatter     = require('eslint-friendly-formatter')
+const {
+    env,
+    esLint,
+    basePath,
+    srcDir,
+    publicPath,
+    outDir
+} = require('./project.config')
 
-const webpack = require('webpack')
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const eslintFormatter = require('eslint-friendly-formatter') //让eslint的错误信息出现在终端上
-const IncludeAssetsPlugin = require('html-webpack-include-assets-plugin') //将js css资源添加到html中 扩展html插件的功能
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const fonts = [
+    ['otf'  , 'font/opentype'],
+    ['ttf'  , 'application/octet-stream'],
+    ['eot'  , 'application/vnd.ms-fontobject'],
+    ['svg'  , 'image/svg+xml'],
+    ['woff' , 'application/font-woff'],
+    ['woff2', 'application/font-woff2']
+]
 
-const NODE_ENV = process.env.NODE_ENV || 'development'
-const envDevelopment = NODE_ENV === 'development' //开发
-const envProduction = NODE_ENV === 'production' //生产
-
-let sourceMap =  NODE_ENV === 'development' ? true : false
-const devtool = sourceMap ? 'cheap-source-map' : false
-
-const isEsLint = true //默认开启eslint检查
-
-const SRC_DIR = path.join(__dirname, '../src')
-
-const eslintRule = () => ({
+const ESLintRule = () => ({
     test: /(\.jsx|\.js)$/,
-    use: {
-        loader: 'eslint-loader?cacheDirectory',
+    use : {
+        loader : 'eslint-loader?cacheDirectory',
         options: {
-            formatter: eslintFormatter
+            formatter: ESLintFormatter
         }
     },
     enforce: 'pre',
-    include: SRC_DIR,
+    include: srcDir,
     exclude: /node_modules/
 })
 
-const config = {
+const base = {
     entry: {
-        main: [SRC_DIR]
+        main: ['@babel/polyfill', srcDir]
     },
     output: {
-        path: path.resolve(__dirname, '../dist'),
-        filename: envDevelopment ? 'js/[name].js' : 'js/[name].[chunkhash:5].js',
-        publicPath: '../',
-        // vendor: ['react','react-dom','react-router-dom'] webpack4以下采用此种方式分离公共代码和第三方依赖 webpack4自动分离
+        publicPath,
+        path: outDir
     },
-    mode: NODE_ENV,
-    devtool: devtool,
     resolve: {
-        modules: [ //引用第三方组件的区域，默认只有node_modules
-            '../src',
-            'node_modules'
-        ],
         alias: {
-            '@': SRC_DIR
+            '@': srcDir
         },
-        extensions: ['*', '.js', '.jsx', '.json', '.less', '.css']
+        modules: [srcDir, 'node_modules'],
+        extensions: ['.js', '.jsx', '.json', '.less', '.css']
     },
     module: {
         rules: [
-            ...(isEsLint ? [eslintRule()] : []),
+            ...(esLint ? [ESLintRule()] : []),
             {
                 test: /(\.jsx|\.js)$/,
-                use: {
+                use : {
                     loader: 'babel-loader?cacheDirectory'
                 },
-                // use: {
-                //     loader: 'babel-loader?cacheDirectory',
-                //     options: {
-                //       presets: ['@babel/preset-env']
-                //     }
-                // }            
-                include: SRC_DIR,
+                include: srcDir,
                 exclude: /node_modules/
             },
             {
-                test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-                use: {
-                    loader: 'url-loader',
+                test: /\.(png|PNG|jpe?g|JPG|gif|GIF)(\?.*)?$/,
+                use : {
+                    loader : 'url-loader',
                     options: {
                         limit: 10000,
-                        outputPath: 'images'
+                        name : 'images/[name].[hash:5].[ext]'
                     }
                 }
-            }
-        ]
-    },
-    optimization: {
-        sideEffects: false,
-        minimize: NODE_ENV === 'production' ? true : false, //production 模式下，这里默认是 true
-        splitChunks: { //webpack4以上的分包方式
-            chunks: 'all',
-            minSize: 30000,
-            minChunks: 1,
-            cacheGroups: {
-                common: {
-                    name: 'common',
-                    test: /node_modules/,
-                    chunks: 'initial',
-                    priority: -10,
-                    enforce: true
-                },
-                styles: {
-                    name: 'styles',
-                    test: /(\.less|\.css)$/,
-                    chunks: 'all',
-                    enforce: true
+            },
+            {
+                test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+                use : {
+                    loader : 'url-loader',
+                    options: {
+                        limit: 10000,
+                        name : 'media/[name].[hash:5].[ext]'
+                    }
                 }
-            }
-        }
+            },
+            ...(() => {
+                let rules = []
+                fonts.forEach((item) => {
+                    rules.push({
+                        test: new RegExp(`\\.${item[0]}$`),
+                        use : {
+                            loader : 'url-loader',
+                            options: {
+                                name    : 'fonts/[name].[hash:5].[ext]',
+                                limit   : 10000,
+                                mimetype: item[1]
+                            }
+                        }
+                    })
+                })
+                return rules
+            })()
+        ]
     },
     performance: {
         hints: false
     },
     plugins: [
-        // new webpack.DllReferencePlugin({
-        //     context: '../',
-        //     manifest: path.resolve('dll', 'manifest.json')
-        // }),
+        new webpack.DefinePlugin({
+            __ENV__: JSON.stringify(env)
+        }),
+        new webpack.DllReferencePlugin({
+            context : basePath,
+            manifest: path.resolve(basePath, '../dll', 'manifest.json')
+        }),
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, '../public/index.html'),
+            template: './public/index.html',
             inject: true,
-            favicon: path.resolve('public', 'favicon.ico'),
+            favicon: path.resolve('./public/favicon.ico'),
             minify: {
                 collapseWhitespace: true
             }
         }),
         new IncludeAssetsPlugin({
             assets: [{
-                path: 'dll',
-                glob: '*.js',
-                globPath: path.join(__dirname, 'dll')
+                path    : 'dll',
+                glob    : '*.js',
+                globPath: path.join(basePath, 'dll')
             }],
             append: false
         })
     ]
 }
 
-const fontLoader = [['woff', 'application/font-woff'], ['woff2', 'application/font-woff2'], ['otf', 'font/opentype'], ['ttf', 'application/octet-stream'], ['eot', 'application/vnd.ms-fontobject'], ['svg', 'image/svg+xml']]
-fontLoader.forEach(font => {
-    let extension = font[0]
-    let mimetype = font[1]
-    config.module.rules.push({
-        test: new RegExp(`\\.${extension}$`),
-        loader: 'url-loader',
-        options: {
-            name: 'fonts/[name].[ext]',
-            limit: 10000,
-            mimetype
-        }
-    })
-})
-
-if (envDevelopment) {
-    config.module.rules.push({
-        test: /(\.less|\.css)$/,
-        use: [{
-            loader: 'style-loader'
-        }, {
-            loader: 'css-loader'
-        }, {
-            loader: 'less-loader',
-            options: {
-                javascriptEnabled: true
-            }
-        }]
-    })
-    config.entry.main.push(
-        'webpack-hot-middleware/client?path=./__webpack_hmr'
-    )
-    config.plugins.push(
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.HotModuleReplacementPlugin()
-    )
-}
-
-if (envProduction) {
-    config.module.rules.push({
-        test: /(\.less|\.css)$/,
-        use: [
-            MiniCssExtractPlugin.loader,
-            {
-                loader: 'css-loader',
-                options: {
-                    importLoaders: 1,
-                    minimize: {
-                        autoprefixer: {
-                            add: true,
-                            remove: true,
-                            browsers: ['last 2 versions']
-                        },
-                        discardComments: {
-                            removeAll: true
-                        },
-                        discardUnused: false,
-                        mergeIdents: false,
-                        reduceIdents: false,
-                        safe: true
-                    }
-                }
-            },
-            {
-                loader: 'less-loader',
-                options: {
-                    javascriptEnabled: true
-                }
-            }
-        ]
-    })
-    config.plugins.push(
-        new MiniCssExtractPlugin({
-            filename: 'css/main.[chunkhash:5].css',
-            chunkFilename: 'css/main.[contenthash:5].css'
-        }),
-        new CopyWebpackPlugin([{
-            from: path.join('dll'),
-            to: path.join('dist', 'dll')
-        }])
-    )
-}
-module.exports = config
+module.exports = base
