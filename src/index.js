@@ -1,31 +1,44 @@
 import React from 'React'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import store from '@/stores'
+import { HashRouter } from 'react-router-dom'
 
-// 监听state变化
-// store.subscribe(() => {
-//   console.log('store发生了变化');
-// });
-
-console.log(store.getState())
-
-store.dispatch({
-    type: 'ADD_TODO',
-    text: '1'
-})
-store.dispatch({
-    type: 'INCREMENT',
-    text: 3
-})
-console.log(store.getState())
+import '@/common/Global'
+import '@a/styles/base.less'
 
 class ShitMe extends React.Component {
+    handleClick = (e) => {
+        e.preventDefault()
+        let param = {
+            obj: 1,
+            obj2: 2
+        }
+
+        // var formData = new URLSearchParams()
+        // formData.append('username', 'Chris')
+        // formData.append('password', '123')
+
+        // var formData2 = new URLSearchParams()
+        // formData2.append('username', 'Chris')
+        // formData2.append('password', '123')
+
+        // let str = JSON.stringify(param)
+
+        // global.Sdk.login(param).then(res => {
+        //     console.log(res)
+        // }).catch(err => {
+        //     throw err
+        // })
+        global.Sdk.loginget(param).then(res => {
+            console.log(res)
+        }).catch(err => {
+            throw err
+        })
+    }
     render() {
         return (
-            <Provider store={store}>
-                <div>123</div>
-            </Provider>
+            <HashRouter>
+                <div onClick={this.handleClick}>5555123456555555</div>
+            </HashRouter>
         )
     }
 }

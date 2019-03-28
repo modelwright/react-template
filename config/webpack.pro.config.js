@@ -81,8 +81,8 @@ const production = {
             filename: 'css/[name].[chunkhash:5].css'
         }),
         new CopyWebpackPlugin([{
-            from: path.join(basePath, '../dll'),
-            to  : path.join(basePath, '../dist', '../dll')
+            from: path.resolve(basePath, '../dll'),
+            to  : path.resolve(basePath, '../dist', 'dll')
         }])
     ]
 }

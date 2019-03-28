@@ -44,7 +44,9 @@ const base = {
     },
     resolve: {
         alias: {
-            '@': srcDir
+            '@': srcDir,
+            '@a': srcDir + '/assets',
+            '@c': srcDir + '/components'
         },
         modules: [srcDir, 'node_modules'],
         extensions: ['.js', '.jsx', '.json', '.less', '.css']

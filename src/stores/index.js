@@ -1,12 +1,16 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux'
+/* ========================================================
 
-import home from './modules/home'
-import mine from './modules/mine'
-import thunk from 'redux-thunk'
+** 全局Store **
 
-let store = createStore(
-    combineReducers({ home, mine }),
-    applyMiddleware(thunk)
-)
+所有 store 均在此统一管理
+用法见 @/routers/Login/container/index.js
 
-export default store
+====================================================== */
+import Root from './Root'
+import Login from './Login'
+
+export default {
+    Root,
+    Login
+}
+   

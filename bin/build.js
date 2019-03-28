@@ -16,7 +16,7 @@ webpack(config).run((err, stats) => {
     if (err || stats.hasErrors()) {
         console.log(chalk.red('  Webpack打包错误！\n'))
     } else {
-        console.log('Webpack打包成功！ cs ../dist. \n')
+        console.log('Webpack打包成功！ cd dist \n')
     }
 
 })

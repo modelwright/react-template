@@ -1,5 +1,6 @@
 import Request from './Request'
 import Api from './Api'
+import Sdk from './Sdk'
 
 // 图片压缩
 // global.ImageResizer = ImageResizer;
@@ -7,3 +8,5 @@ import Api from './Api'
 global.Fetch = Request
 // 请求地址
 global.api = Api
+// 请求SDK
+global.Sdk = Sdk

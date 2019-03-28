@@ -10,7 +10,7 @@
         "@babel/preset-env", //替换之前所有babel-presets-es20xx插件   支持到stage-4
         {
           "modules"    : "commonjs",
-          "useBuiltIns": "usage", // 按需引入 core-js  entry模式引入@babel/polyfill
+          "useBuiltIns": "entry", // usage按需引入 core-js  entry模式引入@babel/polyfill
           "targets"    : { //设置支持环境
             "browsers": ["last 2 versions","safari 7"],
             "chrome": 52,

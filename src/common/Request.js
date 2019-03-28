@@ -92,7 +92,7 @@ const Request = {
                     reject(response.status)
                 }
             }).then(res => {
-                if (res.status == 0) {
+                if (res.status === 0) {
                     message.error(res.message)
                 } else {
                     resolve(res)
