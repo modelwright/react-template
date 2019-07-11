@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Layout, Menu, Icon } from 'antd'
 import routerConfig from '@/router/config'
+import PropTypes from 'prop-types'
 const {
     Sider
 } = Layout
@@ -19,6 +20,7 @@ class LeftMenu extends Component {
         this.props.history.push(key)
     }
     render() {
+        console.log(this.props)
         return (
             <Sider
                 // collapsedWidth='0'
@@ -56,6 +58,11 @@ class LeftMenu extends Component {
             </Sider>
         )
     }
+}
+
+LeftMenu.propTypes = {
+    collapsed: PropTypes.object,
+    history: PropTypes.object
 }
 
 export default LeftMenu

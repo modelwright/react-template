@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx'
-
+// useStrict(true)
 class Root {
     @observable userInfo = {
         name: ''

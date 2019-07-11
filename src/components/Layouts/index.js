@@ -11,10 +11,10 @@ class Layouts extends Component {
         collapsed: false
     };
     render() {
-        const { auth } = this.props
+        // const { auth } = this.props
         const { collapsed } = this.state
         return (
-            <Layout>
+            <Layout style={{ minHeight: '100vh' }}>
                 <LeftMenu collapsed={{ collapsed }} />
                 <Layout>
                     <Header style={{ background: '#fff', padding: 0 }} >
@@ -30,7 +30,7 @@ class Layouts extends Component {
                             <Breadcrumb.Item>Bill</Breadcrumb.Item>
                         </Breadcrumb>
                         <div style={{ padding: '24px', background: 'rgb(255, 255, 255)', height: '100%' }}>
-                            <Routes auth={auth} />
+                            <Routes />
                         </div>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>
